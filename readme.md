@@ -40,7 +40,7 @@ x, yのドット積，コサイン，クロス積，サインを返します．
 
 * ```bool eq(const Point& x, const F& d)```
 
-|x| と d の差がEPS以下であるかを判定します．
+std::abs(x) と d の差がEPS以下であるかを判定します．
 ## Line / Segment
 Line は直線を表し，Segment は線分を表すデータ構造です．
 

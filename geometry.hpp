@@ -11,6 +11,14 @@ namespace geometry{
     constexpr F PI  = 3.14'159'265'358'979'323'846;
     constexpr F EPS = 1e-9;
 
+    F rad_to_deg(F r){
+        return r * 180. / PI;
+    }
+
+    F deg_to_rad(F d){
+        return d / 180. * PI;
+    }
+
     /// dot product
     F dot(const Point& x, const Point& y){
         return x.real() * y.real() + x.imag() * y.imag();
@@ -42,14 +50,6 @@ namespace geometry{
     /// output to "x y"
     std::ostream& operator<<(std::ostream& os, const Point & x){
         return os << x.real() << ' ' << x.imag();
-    }
-
-    F rad_to_deg(F r){
-        return r * 180. / PI;
-    }
-
-    F deg_to_rad(F d){
-        return d / 180. * PI;
     }
 
     /// is |x - y| < EPS
