@@ -162,21 +162,47 @@ namespace geometry{
         return s1.x + d1 / (d1+d2) * (s1.y - s1.x);
     }
 
+    //------ point and lines end
+    // plus polygon
     class Polygon {
         std::vector<Point> ps;
     public:
         Polygon() = default;
         explicit Polygon(std::vector<Point>& p) :ps(p) {}
 
-        /// sort ps according to counter clockwise
-        void sort(){
+        std::istream& input(size_t n, std::istream& is = std::cin){
+            ps.resize(n);
+            for (auto &&x : ps) { is >> x; } // end x
+            return is;
+        }
 
+        std::istream& input(std::istream& is = std::cin){
+            size_t n;
+            is >> n;
+            ps.resize(n);
+            for (auto &&x : ps) { is >> x; } // end x
+            return is;
         }
 
         Point& operator[](size_t i){
             return ps[i];
         }
+
+        size_t size() const{
+            return ps.size();
+        }
     };
+
+
+    F area(Polygon& p) {
+        F sum = 0;
+        auto n = p.size();
+        for (int i = 0; i < n; ++i) {
+            sum += cross(p[i], p[(i+1)%n]);
+        } // end i
+        return sum / 2.;
+    }
+
 }
 
 #endif //COMPUTATIONAL_GEOMETRY_HPP
