@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cmath>
 #include <vector>
+#include <cassert>
 
 namespace geometry{
     using F = double;
@@ -157,10 +158,24 @@ namespace geometry{
         });
     }
 
+    Line bisector(const Point& x, const Point& y){
+        Point c = (x+y)/2.;
+        Point p = (y-x) * Point(0,1);
+        return {c, c+p};
+    }
+
     Point cross_point(const Line& s1, const Line& s2){
-        F d1 = distance(s2, s1.x);
-        F d2 = distance(s2, s1.y);
-        return s1.x + d1 / (d1+d2) * (s1.y - s1.x);
+        auto v = (s1.y - s1.x)*Point(0, -1);
+        auto u = (s2.y - s2.x)*Point(0, -1);
+        F cv = dot(v, s1.x);
+        F cu = dot(u, s2.x);
+        F d = cross(v, u);
+        assert(d != 0);
+        return {
+            (u.imag()*cv - v.imag()*cu) / d,
+            (- u.real()*cv + v.real()*cu) / d
+        };
+
     }
 
     class Polygon {
@@ -227,12 +242,17 @@ namespace geometry{
         F c = distance(z, x);
         Point center = a*z + b * x + c * y;
         center /= a+b+c;
-        F area = abs(cross(x-y, z-y));
-        F r = area / (a+b+c);
+        F r = distance(Line(x, y), center);
         return {center, r};
     }
 
-    Circle circumscribed()
+    Circle excircle(const Point& x, const Point& y, const Point& z){
+        Line bxy = bisector(x, y);
+        Line byz = bisector(y, z);
+        Point c = cross_point(bxy, byz);
+        F r = distance(x, c);
+        return {c, r};
+    }
 }
 
 #endif //COMPUTATIONAL_GEOMETRY_HPP
