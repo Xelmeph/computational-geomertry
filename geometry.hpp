@@ -164,6 +164,7 @@ namespace geometry{
         return {c, c+p};
     }
 
+
     Point cross_point(const Line& s1, const Line& s2){
         auto v = (s1.y - s1.x)*Point(0, -1);
         auto u = (s2.y - s2.x)*Point(0, -1);
@@ -252,6 +253,12 @@ namespace geometry{
         Point c = cross_point(bxy, byz);
         F r = distance(x, c);
         return {c, r};
+    }
+
+    std::pair<Point, Point> cross_point(const Circle& c, const Line& l){
+        Point h = l.projection(c.c);
+        F d = std::sqrt(c.r*c.r - std::pow(distance(h, c.c),2.));
+        return {h + l.v*d, h - l.v*d};
     }
 }
 
