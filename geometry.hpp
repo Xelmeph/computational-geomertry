@@ -4,6 +4,7 @@
 #include <complex>
 #include <algorithm>
 #include <cmath>
+#include <vector>
 
 namespace geometry{
     using F = double;
@@ -156,14 +157,12 @@ namespace geometry{
         });
     }
 
-    Point cross_point(const Segment& s1, const Segment& s2){
+    Point cross_point(const Line& s1, const Line& s2){
         F d1 = distance(s2, s1.x);
         F d2 = distance(s2, s1.y);
         return s1.x + d1 / (d1+d2) * (s1.y - s1.x);
     }
 
-    //------ point and lines end
-    // plus polygon
     class Polygon {
         std::vector<Point> ps;
     public:
@@ -203,6 +202,37 @@ namespace geometry{
         return sum / 2.;
     }
 
+    struct Circle {
+        Point c;
+        F r;
+        Circle() = default;
+        Circle(Point c, F r) :c(c), r(r) {}
+        Circle(F x, F y, F r) :c(x, y), r(r) {}
+    };
+
+    /// https://onlinejudge.u-aizu.ac.jp/courses/library/4/CGL/7/CGL_7_A
+    int intersect(const Circle& C1, const Circle& C2){
+        if(C1.r < C2.r) return intersect(C2, C1);
+        auto d = distance(C1.c, C2.c);
+        if(d > C1.r + C2.r) return 4;
+        if(eq(C1.r, d+C2.r)) return 1;
+        if(C1.r > d+C2.r + EPS) return 0;
+        if(eq(d, C1.r + C2.r)) return 3;
+        return 2;
+    }
+
+    Circle incircle(const Point& x, const Point& y, const Point& z){
+        F a = distance(x, y);
+        F b = distance(y, z);
+        F c = distance(z, x);
+        Point center = a*z + b * x + c * y;
+        center /= a+b+c;
+        F area = abs(cross(x-y, z-y));
+        F r = area / (a+b+c);
+        return {center, r};
+    }
+
+    Circle circumscribed()
 }
 
 #endif //COMPUTATIONAL_GEOMETRY_HPP
